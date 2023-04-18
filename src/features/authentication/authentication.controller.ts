@@ -12,8 +12,8 @@ import { JoiValidationPipe } from '@core/pipes/joi.pipe';
 import { AccountService } from '@features/account/account.service';
 import { SessionService } from '@features/session/session.service';
 
-import { SignInDto, signInSchema } from './dtos/sign-in.dto';
-import { SignUpDto, signUpSchema } from './dtos/sign-up.dto';
+import { SignInDto, signInDtoValidation } from './dtos/sign-in.dto';
+import { SignUpDto, signUpDtoValidation } from './dtos/sign-up.dto';
 
 @Controller('/auth')
 export class AuthenticationController {
@@ -23,7 +23,7 @@ export class AuthenticationController {
 	) {}
 
 	@Post('/sign-in')
-	@UsePipes(new JoiValidationPipe(signInSchema))
+	@UsePipes(new JoiValidationPipe(signInDtoValidation))
 	async signIn(@Body() signInDto: SignInDto) {
 		const account = await this.accountService.findByEmail(signInDto.email);
 
@@ -45,7 +45,7 @@ export class AuthenticationController {
 	}
 
 	@Post('/sign-up')
-	@UsePipes(new JoiValidationPipe(signUpSchema))
+	@UsePipes(new JoiValidationPipe(signUpDtoValidation))
 	async signUp(@Body() signUpDto: SignUpDto) {
 		const account = await this.accountService.findByEmail(signUpDto.email);
 

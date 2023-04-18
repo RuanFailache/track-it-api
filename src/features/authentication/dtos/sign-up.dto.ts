@@ -6,7 +6,7 @@ export class SignUpDto {
 	readonly password: string;
 }
 
-export const signUpSchema = Joi.object<SignUpDto>({
+export const signUpDtoValidation = Joi.object<SignUpDto>({
 	email: Joi.string().email().required(),
 	fullName: Joi.string().required(),
 	password: Joi.string().min(6).required(),
