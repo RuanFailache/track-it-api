@@ -1,10 +1,19 @@
-import { Body, ConflictException, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import {
+	Body,
+	ConflictException,
+	Controller,
+	Post,
+	UnauthorizedException,
+	UsePipes,
+} from '@nestjs/common';
 
-import { AccountService } from '../account/account.service';
-import { SessionService } from '../session/session.service';
+import { JoiValidationPipe } from '@core/pipes/joi.pipe';
 
-import { SignInDto } from './dtos/sign-in.dto';
-import { SignUpDto } from './dtos/sign-up.dto';
+import { AccountService } from '@features/account/account.service';
+import { SessionService } from '@features/session/session.service';
+
+import { SignInDto, signInSchema } from './dtos/sign-in.dto';
+import { SignUpDto, signUpSchema } from './dtos/sign-up.dto';
 
 @Controller('/auth')
 export class AuthenticationController {
@@ -14,6 +23,7 @@ export class AuthenticationController {
 	) {}
 
 	@Post('/sign-in')
+	@UsePipes(new JoiValidationPipe(signInSchema))
 	async signIn(@Body() signInDto: SignInDto) {
 		const account = await this.accountService.findByEmail(signInDto.email);
 
@@ -35,18 +45,19 @@ export class AuthenticationController {
 	}
 
 	@Post('/sign-up')
+	@UsePipes(new JoiValidationPipe(signUpSchema))
 	async signUp(@Body() signUpDto: SignUpDto) {
 		const account = await this.accountService.findByEmail(signUpDto.email);
 
 		if (account !== undefined) throw new ConflictException();
 
-		await this.accountService.create({
+		const newAccount = await this.accountService.create({
 			email: signUpDto.email,
 			fullName: signUpDto.fullName,
 			password: signUpDto.password,
 		});
 
-		const credentials = await this.sessionService.create(account.id);
+		const credentials = await this.sessionService.create(newAccount.id);
 
 		return {
 			accessToken: credentials.accessToken,

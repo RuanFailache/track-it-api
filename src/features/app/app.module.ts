@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthenticationModule } from 'src/modules/authentication/authentication.module';
+import { AuthenticationModule } from '@features/authentication/authentication.module';
 
 @Module({
 	imports: [AuthenticationModule],

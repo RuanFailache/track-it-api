@@ -7,7 +7,16 @@ const accounts: UserEntity[] = [];
 @Injectable()
 export class AccountService {
 	async create(params: Omit<UserEntity, 'id'>) {
-		accounts.push(new UserEntity(randomUUID(), params.email, params.fullName, params.password));
+		const newAccount = new UserEntity(
+			randomUUID(),
+			params.email,
+			params.fullName,
+			params.password,
+		);
+
+		accounts.push(newAccount);
+
+		return newAccount;
 	}
 
 	async findByEmail(email: string) {
