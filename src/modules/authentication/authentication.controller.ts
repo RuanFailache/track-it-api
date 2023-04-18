@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Post } from '@nestjs/common';
+import { Body, ConflictException, Controller, Post, UnauthorizedException } from '@nestjs/common';
 
 import { AccountService } from '../account/account.service';
 import { SessionService } from '../session/session.service';
@@ -6,28 +6,25 @@ import { SessionService } from '../session/session.service';
 import { SignInDto } from './dtos/sign-in.dto';
 import { SignUpDto } from './dtos/sign-up.dto';
 
-import { AuthenticationService } from './authentication.service';
-
-@Controller()
+@Controller('/auth')
 export class AuthenticationController {
 	constructor(
 		private readonly accountService: AccountService,
-		private readonly authenticationService: AuthenticationService,
 		private readonly sessionService: SessionService,
 	) {}
 
-	@Post()
+	@Post('/sign-in')
 	async signIn(@Body() signInDto: SignInDto) {
 		const account = await this.accountService.findByEmail(signInDto.email);
 
-		if (account === undefined) throw new BadRequestException();
+		if (account === undefined) throw new UnauthorizedException();
 
-		const isCorrectPassword = this.authenticationService.checkIfPasswordIsCorrect(
+		const isCorrectPassword = this.accountService.checkIfPasswordIsCorrect(
 			signInDto.password,
 			account.password,
 		);
 
-		if (!isCorrectPassword) throw new BadRequestException();
+		if (!isCorrectPassword) throw new UnauthorizedException();
 
 		const credentials = await this.sessionService.create(account.id);
 
@@ -37,11 +34,11 @@ export class AuthenticationController {
 		};
 	}
 
-	@Post()
+	@Post('/sign-up')
 	async signUp(@Body() signUpDto: SignUpDto) {
 		const account = await this.accountService.findByEmail(signUpDto.email);
 
-		if (account === undefined) throw new ConflictException();
+		if (account !== undefined) throw new ConflictException();
 
 		await this.accountService.create({
 			email: signUpDto.email,

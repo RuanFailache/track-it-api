@@ -10,7 +10,11 @@ export class AccountService {
 		accounts.push(new UserEntity(randomUUID(), params.email, params.fullName, params.password));
 	}
 
-	async findByEmail(email: string): Promise<UserEntity> {
-		return new UserEntity('id', email, 'nome', 'senha');
+	async findByEmail(email: string) {
+		return accounts.find((account) => account.email === email);
+	}
+
+	async checkIfPasswordIsCorrect(password: string, accountPassword: string) {
+		return password === accountPassword;
 	}
 }
