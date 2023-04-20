@@ -1,43 +1,28 @@
-import {
-	Body,
-	ConflictException,
-	Controller,
-	Post,
-	UnauthorizedException,
-	UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 
 import { JoiValidationPipe } from '@adapters/joi/joi.pipe';
 
-import { AccountService } from '@features/account/account.service';
+import { UserService } from '@features/user/user.service';
 import { SessionService } from '@features/session/session.service';
 
-import { SignInDto, signInDtoValidation } from './dtos/sign-in.dto';
-import { SignUpDto, signUpDtoValidation } from './dtos/sign-up.dto';
+import { SignInDto, signInDtoSchema } from './dtos/sign-in.dto';
+import { SignUpDto, signUpDtoSchema } from './dtos/sign-up.dto';
 
 @Controller('/auth')
 export class AuthenticationController {
 	constructor(
-		private readonly accountService: AccountService,
+		private readonly userService: UserService,
 		private readonly sessionService: SessionService,
 	) {}
 
 	@Post('/sign-in')
-	@UsePipes(new JoiValidationPipe(signInDtoValidation))
+	@UsePipes(new JoiValidationPipe(signInDtoSchema))
 	async signIn(@Body() signInDto: SignInDto) {
-		const account = await this.accountService.findByEmail(signInDto.email);
-
-		if (account === undefined) throw new UnauthorizedException();
-
-		const isCorrectPassword = this.accountService.checkIfPasswordIsCorrect(
+		const user = await this.userService.validate(
+			signInDto.email,
 			signInDto.password,
-			account.password,
 		);
-
-		if (!isCorrectPassword) throw new UnauthorizedException();
-
-		const credentials = await this.sessionService.create(account.id);
-
+		const credentials = await this.sessionService.create(user.id);
 		return {
 			accessToken: credentials.accessToken,
 			refreshToken: credentials.refreshToken,
@@ -45,20 +30,14 @@ export class AuthenticationController {
 	}
 
 	@Post('/sign-up')
-	@UsePipes(new JoiValidationPipe(signUpDtoValidation))
+	@UsePipes(new JoiValidationPipe(signUpDtoSchema))
 	async signUp(@Body() signUpDto: SignUpDto) {
-		const account = await this.accountService.findByEmail(signUpDto.email);
-
-		if (account !== undefined) throw new ConflictException();
-
-		const newAccount = await this.accountService.create({
-			email: signUpDto.email,
-			fullName: signUpDto.fullName,
-			password: signUpDto.password,
-		});
-
-		const credentials = await this.sessionService.create(newAccount.id);
-
+		const newUser = await this.userService.create(
+			signUpDto.email,
+			signUpDto.fullName,
+			signUpDto.password,
+		);
+		const credentials = await this.sessionService.create(newUser.id);
 		return {
 			accessToken: credentials.accessToken,
 			refreshToken: credentials.refreshToken,

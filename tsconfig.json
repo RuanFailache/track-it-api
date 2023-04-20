@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": false,
 	"paths": {
 		"@adapters/*": ["./src/adapters/*"],
-		"@config/*": ["./src/config/*"],
+		"@app/*": ["./src/app/*"],
 		"@features/*": ["./src/features/*"],
 	}
   }
