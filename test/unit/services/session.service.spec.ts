@@ -22,9 +22,9 @@ describe('SessionService', () => {
 	});
 
 	describe('create', () => {
-		it('Should ensure UserController.signIn returns correct values', async () => {
-			const accessToken = 'token';
+		const accessToken = 'token';
 
+		beforeEach(() => {
 			jest.spyOn(sessionRepository, 'create').mockImplementation(() =>
 				Promise.resolve(),
 			);
@@ -32,7 +32,35 @@ describe('SessionService', () => {
 			jest.spyOn(jwtService, 'signAsync').mockImplementation(() =>
 				Promise.resolve(accessToken),
 			);
+		});
 
+		it('Should ensure UserController.signIn calls SessionRepository.create once', async () => {
+			const sessionRepositoryFn = jest
+				.spyOn(sessionService, 'create')
+				.mockImplementation(() => Promise.resolve(accessToken));
+
+			await sessionService.create('id', {
+				email: 'valid@email.com',
+				password: 'senha',
+			});
+
+			expect(sessionRepositoryFn.mock.calls).toHaveLength(1);
+		});
+
+		it('Should ensure UserController.signIn calls JwtService.signAsync once', async () => {
+			const jwtServiceFn = jest
+				.spyOn(jwtService, 'signAsync')
+				.mockImplementation(() => Promise.resolve(accessToken));
+
+			await sessionService.create('id', {
+				email: 'valid@email.com',
+				password: 'senha',
+			});
+
+			expect(jwtServiceFn.mock.calls).toHaveLength(1);
+		});
+
+		it('Should ensure UserController.signIn returns correct values', async () => {
 			const res = await sessionService.create('id', {
 				email: 'valid@email.com',
 				password: 'senha',
