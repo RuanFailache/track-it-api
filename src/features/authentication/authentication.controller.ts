@@ -26,29 +26,33 @@ export class AuthenticationController {
 	@HttpCode(HttpStatus.CREATED)
 	@UsePipes(new JoiValidationPipe(signInDtoSchema))
 	async signIn(@Body() signInDto: SignInDto) {
-		const user = await this.userService.validate(
+		const userId = await this.userService.validate(
 			signInDto.email,
 			signInDto.password,
 		);
-		const accessToken = await this.sessionService.create(user.id, {
+
+		const accessToken = await this.sessionService.create(userId, {
 			email: signInDto.email,
 			password: signInDto.password,
 		});
+
 		return { accessToken };
 	}
 
 	@Post('/sign-up')
 	@UsePipes(new JoiValidationPipe(signUpDtoSchema))
 	async signUp(@Body() signUpDto: SignUpDto) {
-		const newUser = await this.userService.create(
+		const newUserId = await this.userService.create(
 			signUpDto.email,
 			signUpDto.fullName,
 			signUpDto.password,
 		);
-		const accessToken = await this.sessionService.create(newUser.id, {
+
+		const accessToken = await this.sessionService.create(newUserId, {
 			email: signUpDto.email,
 			password: signUpDto.password,
 		});
+
 		return { accessToken };
 	}
 }
