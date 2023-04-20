@@ -14,6 +14,7 @@ import { SessionService } from '@features/session/session.service';
 
 import { SignInDto, signInDtoSchema } from './dtos/sign-in.dto';
 import { SignUpDto, signUpDtoSchema } from './dtos/sign-up.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('/auth')
 export class AuthenticationController {
@@ -23,6 +24,7 @@ export class AuthenticationController {
 	) {}
 
 	@Post('/sign-in')
+	@ApiTags('authentication')
 	@HttpCode(HttpStatus.CREATED)
 	@UsePipes(new JoiValidationPipe(signInDtoSchema))
 	async signIn(@Body() signInDto: SignInDto) {
@@ -40,6 +42,7 @@ export class AuthenticationController {
 	}
 
 	@Post('/sign-up')
+	@ApiTags('authentication')
 	@UsePipes(new JoiValidationPipe(signUpDtoSchema))
 	async signUp(@Body() signUpDto: SignUpDto) {
 		const newUserId = await this.userService.create(
