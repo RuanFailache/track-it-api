@@ -1,9 +1,10 @@
 import { Test } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
+import { faker } from '@faker-js/faker';
 
 import { SessionModule } from '@features/session/session.module';
 import { SessionService } from '@features/session/session.service';
 import { SessionRepository } from '@features/session/session.repository';
-import { JwtService } from '@nestjs/jwt';
 
 describe('SessionService', () => {
 	let jwtService: JwtService;
@@ -22,7 +23,13 @@ describe('SessionService', () => {
 	});
 
 	describe('create', () => {
-		const accessToken = 'token';
+		const accessToken = faker.datatype.uuid();
+
+		const callSessionServiceCreate = () =>
+			sessionService.create('id', {
+				email: faker.internet.email(),
+				password: faker.internet.password(),
+			});
 
 		beforeEach(() => {
 			jest.spyOn(sessionRepository, 'create').mockImplementation(() =>
@@ -36,13 +43,10 @@ describe('SessionService', () => {
 
 		it('Should ensure UserController.signIn calls SessionRepository.create once', async () => {
 			const sessionRepositoryFn = jest
-				.spyOn(sessionService, 'create')
-				.mockImplementation(() => Promise.resolve(accessToken));
+				.spyOn(sessionRepository, 'create')
+				.mockImplementation(() => Promise.resolve());
 
-			await sessionService.create('id', {
-				email: 'valid@email.com',
-				password: 'senha',
-			});
+			await callSessionServiceCreate();
 
 			expect(sessionRepositoryFn.mock.calls).toHaveLength(1);
 		});
@@ -52,19 +56,13 @@ describe('SessionService', () => {
 				.spyOn(jwtService, 'signAsync')
 				.mockImplementation(() => Promise.resolve(accessToken));
 
-			await sessionService.create('id', {
-				email: 'valid@email.com',
-				password: 'senha',
-			});
+			await callSessionServiceCreate();
 
 			expect(jwtServiceFn.mock.calls).toHaveLength(1);
 		});
 
 		it('Should ensure UserController.signIn returns correct values', async () => {
-			const res = await sessionService.create('id', {
-				email: 'valid@email.com',
-				password: 'senha',
-			});
+			const res = await callSessionServiceCreate();
 
 			expect(res).toBe(accessToken);
 		});

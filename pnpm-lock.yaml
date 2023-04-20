@@ -36,6 +36,9 @@ dependencies:
     version: 7.2.0
 
 devDependencies:
+  '@faker-js/faker':
+    specifier: ^7.6.0
+    version: 7.6.0
   '@nestjs/cli':
     specifier: ^9.0.0
     version: 9.0.0
@@ -516,6 +519,11 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@faker-js/faker@7.6.0:
+    resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
+    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
     dev: true
 
   /@hapi/hoek@9.3.0:
