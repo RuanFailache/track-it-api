@@ -42,4 +42,27 @@ describe('AuthenticationController', () => {
 			expect(res).toStrictEqual({ accessToken });
 		});
 	});
+
+	describe('signUp', () => {
+		it('Should ensure UserController.signUp returns correct values', async () => {
+			const userId = 'id';
+			const accessToken = 'token';
+
+			jest.spyOn(userService, 'create').mockImplementation(() =>
+				Promise.resolve(userId),
+			);
+
+			jest.spyOn(sessionService, 'create').mockImplementation(() =>
+				Promise.resolve(accessToken),
+			);
+
+			const res = await authenticationController.signUp({
+				fullName: 'Valid Name',
+				email: 'valid@email.com',
+				password: 'senha',
+			});
+
+			expect(res).toStrictEqual({ accessToken });
+		});
+	});
 });
