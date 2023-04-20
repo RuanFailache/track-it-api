@@ -6,11 +6,19 @@ import { PrismaProvider } from '@adapters/prisma/prisma.provider';
 export class SessionRepository {
 	constructor(private prismaProvider: PrismaProvider) {}
 
-	create(userId: string) {
-		this.prismaProvider.session.create({
+	async create(userId: string, accessToken: string) {
+		return this.prismaProvider.session.create({
 			data: {
 				userId,
-				accessToken: '',
+				accessToken,
+			},
+		});
+	}
+
+	async findByUserId(userId: string) {
+		return this.prismaProvider.session.findMany({
+			where: {
+				userId,
 			},
 		});
 	}

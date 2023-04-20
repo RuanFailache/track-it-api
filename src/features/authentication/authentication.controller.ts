@@ -1,4 +1,11 @@
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	HttpCode,
+	HttpStatus,
+	Post,
+	UsePipes,
+} from '@nestjs/common';
 
 import { JoiValidationPipe } from '@adapters/joi/joi.pipe';
 
@@ -16,17 +23,18 @@ export class AuthenticationController {
 	) {}
 
 	@Post('/sign-in')
+	@HttpCode(HttpStatus.CREATED)
 	@UsePipes(new JoiValidationPipe(signInDtoSchema))
 	async signIn(@Body() signInDto: SignInDto) {
 		const user = await this.userService.validate(
 			signInDto.email,
 			signInDto.password,
 		);
-		const credentials = await this.sessionService.create(user.id);
-		return {
-			accessToken: credentials.accessToken,
-			refreshToken: credentials.refreshToken,
-		};
+		const accessToken = await this.sessionService.create(user.id, {
+			email: signInDto.email,
+			password: signInDto.password,
+		});
+		return { accessToken };
 	}
 
 	@Post('/sign-up')
@@ -37,10 +45,10 @@ export class AuthenticationController {
 			signUpDto.fullName,
 			signUpDto.password,
 		);
-		const credentials = await this.sessionService.create(newUser.id);
-		return {
-			accessToken: credentials.accessToken,
-			refreshToken: credentials.refreshToken,
-		};
+		const accessToken = await this.sessionService.create(newUser.id, {
+			email: signUpDto.email,
+			password: signUpDto.password,
+		});
+		return { accessToken };
 	}
 }
