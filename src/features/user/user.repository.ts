@@ -1,7 +1,7 @@
 import { PrismaProvider } from '@adapters/prisma/prisma.provider';
 
 export class UserRepository {
-	constructor(private prismaProvider: PrismaProvider) {}
+	constructor(private readonly prismaProvider: PrismaProvider) {}
 
 	async findByEmail(email: string) {
 		return this.prismaProvider.user.findFirst({

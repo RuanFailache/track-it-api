@@ -26,25 +26,21 @@ describe('SessionService', () => {
 		const accessToken = faker.datatype.uuid();
 
 		const callSessionServiceCreate = () =>
-			sessionService.create('id', {
+			sessionService.create(faker.datatype.uuid(), {
 				email: faker.internet.email(),
 				password: faker.internet.password(),
 			});
 
 		beforeEach(() => {
-			jest.spyOn(sessionRepository, 'create').mockImplementation(() =>
-				Promise.resolve(),
-			);
+			jest.spyOn(sessionRepository, 'create').mockResolvedValue();
 
-			jest.spyOn(jwtService, 'signAsync').mockImplementation(() =>
-				Promise.resolve(accessToken),
-			);
+			jest.spyOn(jwtService, 'signAsync').mockResolvedValue(accessToken);
 		});
 
 		it('Should ensure UserController.signIn calls SessionRepository.create once', async () => {
 			const sessionRepositoryFn = jest
 				.spyOn(sessionRepository, 'create')
-				.mockImplementation(() => Promise.resolve());
+				.mockResolvedValue();
 
 			await callSessionServiceCreate();
 
@@ -54,14 +50,14 @@ describe('SessionService', () => {
 		it('Should ensure UserController.signIn calls JwtService.signAsync once', async () => {
 			const jwtServiceFn = jest
 				.spyOn(jwtService, 'signAsync')
-				.mockImplementation(() => Promise.resolve(accessToken));
+				.mockResolvedValue(accessToken);
 
 			await callSessionServiceCreate();
 
 			expect(jwtServiceFn.mock.calls).toHaveLength(1);
 		});
 
-		it('Should ensure UserController.signIn returns correct values', async () => {
+		it('Should ensure UserController.signIn returns correct values on success', async () => {
 			const res = await callSessionServiceCreate();
 
 			expect(res).toBe(accessToken);

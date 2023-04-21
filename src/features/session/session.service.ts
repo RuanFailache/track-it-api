@@ -11,8 +11,8 @@ interface CreateSessionPayload {
 @Injectable()
 export class SessionService {
 	constructor(
-		private sessionRepository: SessionRepository,
-		private jwtService: JwtService,
+		private readonly sessionRepository: SessionRepository,
+		private readonly jwtService: JwtService,
 	) {}
 
 	async create(userId: string, payload: CreateSessionPayload) {

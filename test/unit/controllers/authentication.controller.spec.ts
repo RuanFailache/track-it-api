@@ -33,19 +33,15 @@ describe('AuthenticationController', () => {
 			});
 
 		beforeEach(() => {
-			jest.spyOn(userService, 'validate').mockImplementation(() =>
-				Promise.resolve(userId),
-			);
+			jest.spyOn(userService, 'validate').mockResolvedValue(userId);
 
-			jest.spyOn(sessionService, 'create').mockImplementation(() =>
-				Promise.resolve(accessToken),
-			);
+			jest.spyOn(sessionService, 'create').mockResolvedValue(accessToken);
 		});
 
 		it('Should ensure UserController.signIn calls UserService.validate once', async () => {
 			const userServiceFn = jest
 				.spyOn(userService, 'validate')
-				.mockImplementation(() => Promise.resolve(userId));
+				.mockResolvedValue(userId);
 
 			await callAuthenticationControllerSignIn();
 
@@ -55,14 +51,14 @@ describe('AuthenticationController', () => {
 		it('Should ensure UserController.signIn calls SessionService.create once', async () => {
 			const sessionServiceFn = jest
 				.spyOn(sessionService, 'create')
-				.mockImplementation(() => Promise.resolve(accessToken));
+				.mockResolvedValue(accessToken);
 
 			await callAuthenticationControllerSignIn();
 
 			expect(sessionServiceFn.mock.calls).toHaveLength(1);
 		});
 
-		it('Should ensure UserController.signIn returns correct values', async () => {
+		it('Should ensure UserController.signIn returns correct values on success', async () => {
 			const res = await callAuthenticationControllerSignIn();
 
 			expect(res).toStrictEqual({ accessToken });
@@ -78,19 +74,15 @@ describe('AuthenticationController', () => {
 			});
 
 		beforeEach(() => {
-			jest.spyOn(userService, 'create').mockImplementation(() =>
-				Promise.resolve(userId),
-			);
+			jest.spyOn(userService, 'create').mockResolvedValue(userId);
 
-			jest.spyOn(sessionService, 'create').mockImplementation(() =>
-				Promise.resolve(accessToken),
-			);
+			jest.spyOn(sessionService, 'create').mockResolvedValue(accessToken);
 		});
 
 		it('Should ensure UserController.signIn calls UserService.create once', async () => {
 			const userServiceFn = jest
 				.spyOn(userService, 'create')
-				.mockImplementation(() => Promise.resolve(userId));
+				.mockResolvedValue(userId);
 
 			await callAuthenticationControllerSignUp();
 
@@ -100,14 +92,14 @@ describe('AuthenticationController', () => {
 		it('Should ensure UserController.signIn calls SessionService.create once', async () => {
 			const sessionServiceFn = jest
 				.spyOn(sessionService, 'create')
-				.mockImplementation(() => Promise.resolve(accessToken));
+				.mockResolvedValue(accessToken);
 
 			await callAuthenticationControllerSignUp();
 
 			expect(sessionServiceFn.mock.calls).toHaveLength(1);
 		});
 
-		it('Should ensure UserController.signUp returns correct values', async () => {
+		it('Should ensure UserController.signUp returns correct values on success', async () => {
 			const res = await callAuthenticationControllerSignUp();
 
 			expect(res).toStrictEqual({ accessToken });
