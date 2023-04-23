@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
-import { PrismaModule } from '@adapters/prisma/prisma.module';
+import { PrismaModule } from 'src/external/prisma/prisma.module';
 
 import { SessionService } from './session.service';
 import { SessionRepository } from './session.repository';

@@ -7,7 +7,7 @@ import {
 	UsePipes,
 } from '@nestjs/common';
 
-import { JoiValidationPipe } from '@adapters/joi/joi.pipe';
+import { JoiValidationPipe } from 'src/external/joi/joi.pipe';
 
 import { UserService } from '@features/user/user.service';
 import { SessionService } from '@features/session/session.service';

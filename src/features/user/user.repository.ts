@@ -1,4 +1,4 @@
-import { PrismaProvider } from '@adapters/prisma/prisma.provider';
+import { PrismaProvider } from 'src/external/prisma/prisma.provider';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

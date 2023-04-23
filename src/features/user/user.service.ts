@@ -5,10 +5,10 @@ import {
 	Inject,
 } from '@nestjs/common';
 
-import { BcryptType } from '@adapters/imports/imports.provider';
+import { BcryptType } from 'src/external/imports/imports.provider';
 
 import { UserRepository } from './user.repository';
-import { ImportProvider } from '@adapters/imports/imports.constants';
+import { ImportProvider } from 'src/external/imports/imports.constants';
 
 @Injectable()
 export class UserService {
