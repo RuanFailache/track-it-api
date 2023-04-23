@@ -1,5 +1,7 @@
 import { PrismaProvider } from '@adapters/prisma/prisma.provider';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserRepository {
 	constructor(private readonly prismaProvider: PrismaProvider) {}
 

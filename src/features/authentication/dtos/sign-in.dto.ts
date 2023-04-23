@@ -7,5 +7,5 @@ export class SignInDto {
 
 export const signInDtoSchema = Joi.object<SignInDto>({
 	email: Joi.string().email().required(),
-	password: Joi.string().min(6).required(),
+	password: Joi.string().required(),
 });

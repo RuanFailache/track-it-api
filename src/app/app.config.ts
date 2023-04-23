@@ -1,5 +1,11 @@
 import { ConfigModuleOptions } from '@nestjs/config';
 
+const envFileOptions = {
+	production: '.env',
+	development: '.env.development',
+	test: '.env.test',
+};
+
 export const appConfigOptions: ConfigModuleOptions = {
-	envFilePath: ['.env', '.env.development', '.env.test'],
+	envFilePath: envFileOptions[process.env.NODE_ENV],
 };

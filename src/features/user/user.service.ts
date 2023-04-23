@@ -21,7 +21,7 @@ export class UserService {
 	async create(email: string, fullName: string, password: string) {
 		const user = await this.userRepository.findByEmail(email);
 
-		if (user !== undefined) throw new ConflictException();
+		if (user) throw new ConflictException();
 
 		const encodedPassword = this.bcrypt.hashSync(password, 10);
 
@@ -37,7 +37,7 @@ export class UserService {
 	async validate(email: string, password: string) {
 		const user = await this.userRepository.findByEmail(email);
 
-		if (user === undefined) throw new UnauthorizedException();
+		if (!user) throw new UnauthorizedException();
 
 		const isCorrectPassword = this.bcrypt.compareSync(
 			password,
