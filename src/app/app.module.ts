@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import { PrismaModule } from '@external/prisma/prisma.module';
+
 import { appConfigOptions } from './app.config';
-import { PrismaModule } from 'src/external/prisma/prisma.module';
-import { AuthenticationModule } from '@features/authentication/authentication.module';
+import { appRoutes } from './app.routes';
 
 @Module({
 	imports: [
+		...appRoutes,
 		ConfigModule.forRoot(appConfigOptions),
 		PrismaModule,
-		AuthenticationModule,
 	],
 	exports: [PrismaModule],
 })

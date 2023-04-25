@@ -1,5 +1,6 @@
-import { PrismaProvider } from 'src/external/prisma/prisma.provider';
 import { Injectable } from '@nestjs/common';
+
+import { PrismaProvider } from '@external/prisma/prisma.provider';
 
 @Injectable()
 export class UserRepository {

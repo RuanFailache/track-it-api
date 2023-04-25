@@ -74,10 +74,12 @@
 		"coverageDirectory": "../coverage",
 		"coveragePathIgnorePatterns": [
 			"node_modules",
-			"dist"
+			"dist",
+			"src/main.ts"
 		],
 		"moduleNameMapper": {
-			"@adapters/(.*)": "<rootDir>/src/adapters/$1",
+			"@app/(.*)": "<rootDir>/src/app/$1",
+			"@external/(.*)": "<rootDir>/src/external/$1",
 			"@features/(.*)": "<rootDir>/src/features/$1"
 		}
 	}

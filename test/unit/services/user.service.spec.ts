@@ -13,7 +13,6 @@ const fakeUser: User = {
 	email: faker.internet.email(),
 	fullName: faker.name.fullName(),
 	password: faker.internet.password(),
-	sessionId: faker.datatype.uuid(),
 	createdAt: new Date(),
 	updatedAt: new Date(),
 };

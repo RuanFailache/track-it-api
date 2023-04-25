@@ -1,10 +1,10 @@
+import { faker } from '@faker-js/faker';
 import { Test } from '@nestjs/testing';
 
 import { AuthenticationController } from '@features/authentication/authentication.controller';
 import { SessionService } from '@features/session/session.service';
 import { UserService } from '@features/user/user.service';
 import { AuthenticationModule } from '@features/authentication/authentication.module';
-import { faker } from '@faker-js/faker';
 
 describe('AuthenticationController', () => {
 	let authenticationController: AuthenticationController;

@@ -6,17 +6,17 @@ import {
 	Post,
 	UsePipes,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
-import { JoiValidationPipe } from 'src/external/joi/joi.pipe';
+import { JoiValidationPipe } from '@external/joi/joi.pipe';
 
 import { UserService } from '@features/user/user.service';
 import { SessionService } from '@features/session/session.service';
 
 import { SignInDto, signInDtoSchema } from './dtos/sign-in.dto';
 import { SignUpDto, signUpDtoSchema } from './dtos/sign-up.dto';
-import { ApiTags } from '@nestjs/swagger';
 
-@Controller('/auth')
+@Controller('/api/auth')
 export class AuthenticationController {
 	constructor(
 		private readonly userService: UserService,
