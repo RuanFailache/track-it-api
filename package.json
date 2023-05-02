@@ -78,9 +78,9 @@
 			"src/main.ts"
 		],
 		"moduleNameMapper": {
-			"@app/(.*)": "<rootDir>/src/app/$1",
-			"@external/(.*)": "<rootDir>/src/external/$1",
-			"@features/(.*)": "<rootDir>/src/features/$1"
+			"@application/(.*)": "<rootDir>/src/application/$1",
+			"@infrastructure/(.*)": "<rootDir>/src/infrastructure/$1",
+			"@presentation/(.*)": "<rootDir>/src/presentation/$1"
 		}
 	}
 }

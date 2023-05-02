@@ -2,13 +2,14 @@ import { Test } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { faker } from '@faker-js/faker';
 
-import { SessionModule } from '@features/session/session.module';
-import { SessionService } from '@features/session/session.service';
-import { SessionRepository } from '@features/session/session.repository';
+import { SessionUseCase } from '@application/usecases/session.usecase';
 
-describe('SessionService', () => {
+import { SessionModule } from '@infrastructure/modules/session.module';
+import { SessionRepository } from '@infrastructure/database/repositories/session.repository';
+
+describe('SessionUseCase', () => {
 	let jwtService: JwtService;
-	let sessionService: SessionService;
+	let sessionUseCase: SessionUseCase;
 
 	let sessionRepository: SessionRepository;
 
@@ -18,15 +19,15 @@ describe('SessionService', () => {
 		}).compile();
 
 		jwtService = moduleRef.get(JwtService);
-		sessionService = moduleRef.get(SessionService);
+		sessionUseCase = moduleRef.get(SessionUseCase);
 		sessionRepository = moduleRef.get(SessionRepository);
 	});
 
 	describe('create', () => {
 		const accessToken = faker.datatype.uuid();
 
-		const callSessionServiceCreate = () =>
-			sessionService.create(faker.datatype.uuid(), {
+		const callSessionUseCaseCreate = () =>
+			sessionUseCase.create(faker.datatype.uuid(), {
 				email: faker.internet.email(),
 				password: faker.internet.password(),
 			});
@@ -42,7 +43,7 @@ describe('SessionService', () => {
 				.spyOn(sessionRepository, 'create')
 				.mockResolvedValue();
 
-			await callSessionServiceCreate();
+			await callSessionUseCaseCreate();
 
 			expect(sessionRepositoryFn.mock.calls).toHaveLength(1);
 		});
@@ -52,13 +53,13 @@ describe('SessionService', () => {
 				.spyOn(jwtService, 'signAsync')
 				.mockResolvedValue(accessToken);
 
-			await callSessionServiceCreate();
+			await callSessionUseCaseCreate();
 
 			expect(jwtServiceFn.mock.calls).toHaveLength(1);
 		});
 
 		it('Should ensure UserController.signIn returns correct values on success', async () => {
-			const res = await callSessionServiceCreate();
+			const res = await callSessionUseCaseCreate();
 
 			expect(res).toBe(accessToken);
 		});
