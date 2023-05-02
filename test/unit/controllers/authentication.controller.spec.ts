@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Test } from '@nestjs/testing';
 
-import { AuthenticationController } from '@features/authentication/authentication.controller';
+import { AuthenticationController } from 'src/presentation/controllers/authentication.controller';
 import { SessionService } from '@features/session/session.service';
 import { UserService } from '@features/user/user.service';
 import { AuthenticationModule } from '@features/authentication/authentication.module';

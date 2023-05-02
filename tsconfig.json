@@ -18,9 +18,9 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
 	"paths": {
-		"@external/*": ["src/external/*"],
-		"@app/*": ["./src/app/*"],
-		"@features/*": ["./src/features/*"],
+		"@application/*": ["src/application/*"],
+		"@infrastructure/*": ["./src/infrastructure/*"],
+		"@presentation/*": ["./src/presentation/*"],
 	}
   }
 }

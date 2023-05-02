@@ -2,19 +2,15 @@ import {
 	Injectable,
 	ConflictException,
 	UnauthorizedException,
-	Inject,
 } from '@nestjs/common';
 
-import { BcryptType } from '@external/imports/imports.provider';
-import { ImportProvider } from '@external/imports/imports.constants';
-
-import { UserRepository } from './user.repository';
+import { BcryptService } from '@infrastructure/external/bcrypt/bcrypt.service';
+import { UserRepository } from '@infrastructure/database/repositories/user.repository';
 
 @Injectable()
-export class UserService {
+export class UserUseCase {
 	constructor(
-		@Inject(ImportProvider.BCRYPT)
-		private readonly bcrypt: BcryptType,
+		private readonly bcryptService: BcryptService,
 		private readonly userRepository: UserRepository,
 	) {}
 
@@ -23,7 +19,7 @@ export class UserService {
 
 		if (user) throw new ConflictException();
 
-		const encodedPassword = this.bcrypt.hashSync(password, 10);
+		const encodedPassword = this.bcryptService.encode(password);
 
 		const newUser = await this.userRepository.create(
 			email,
@@ -39,7 +35,7 @@ export class UserService {
 
 		if (!user) throw new UnauthorizedException();
 
-		const isCorrectPassword = this.bcrypt.compareSync(
+		const isCorrectPassword = this.bcryptService.validate(
 			password,
 			user.password,
 		);

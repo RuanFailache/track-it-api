@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { SessionRepository } from './session.repository';
+import { SessionRepository } from '@infrastructure/database/repositories/session.repository';
 
 interface CreateSessionPayload {
 	email: string;
@@ -9,7 +9,7 @@ interface CreateSessionPayload {
 }
 
 @Injectable()
-export class SessionService {
+export class SessionUseCase {
 	constructor(
 		private readonly sessionRepository: SessionRepository,
 		private readonly jwtService: JwtService,

@@ -8,32 +8,31 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { JoiValidationPipe } from '@external/joi/joi.pipe';
+import { UserUseCase } from '@application/usecases/user.usecase';
+import { SessionUseCase } from '@application/usecases/session.usecase';
 
-import { UserService } from '@features/user/user.service';
-import { SessionService } from '@features/session/session.service';
+import { JoiValidationPipe } from '@infrastructure/external/joi/joi.pipe';
 
-import { SignInDto, signInDtoSchema } from './dtos/sign-in.dto';
-import { SignUpDto, signUpDtoSchema } from './dtos/sign-up.dto';
+import { SignInDto, SignUpDto } from '../dtos/authentication.dto';
 
 @Controller('/api/auth')
 export class AuthenticationController {
 	constructor(
-		private readonly userService: UserService,
-		private readonly sessionService: SessionService,
+		private readonly userUseCase: UserUseCase,
+		private readonly sessionUseCase: SessionUseCase,
 	) {}
 
 	@Post('/sign-in')
 	@ApiTags('authentication')
 	@HttpCode(HttpStatus.CREATED)
-	@UsePipes(new JoiValidationPipe(signInDtoSchema))
+	@UsePipes(new JoiValidationPipe(SignInDto.schema))
 	async signIn(@Body() signInDto: SignInDto) {
-		const userId = await this.userService.validate(
+		const userId = await this.userUseCase.validate(
 			signInDto.email,
 			signInDto.password,
 		);
 
-		const accessToken = await this.sessionService.create(userId, {
+		const accessToken = await this.sessionUseCase.create(userId, {
 			email: signInDto.email,
 			password: signInDto.password,
 		});
@@ -43,15 +42,15 @@ export class AuthenticationController {
 
 	@Post('/sign-up')
 	@ApiTags('authentication')
-	@UsePipes(new JoiValidationPipe(signUpDtoSchema))
+	@UsePipes(new JoiValidationPipe(SignUpDto.schema))
 	async signUp(@Body() signUpDto: SignUpDto) {
-		const newUserId = await this.userService.create(
+		const newUserId = await this.userUseCase.create(
 			signUpDto.email,
 			signUpDto.fullName,
 			signUpDto.password,
 		);
 
-		const accessToken = await this.sessionService.create(newUserId, {
+		const accessToken = await this.sessionUseCase.create(newUserId, {
 			email: signUpDto.email,
 			password: signUpDto.password,
 		});
